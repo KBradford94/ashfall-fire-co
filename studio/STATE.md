@@ -1,7 +1,7 @@
 ════ STUDIO STATE ════
 PROJECT:      Ashfall Fire Co. · Electron (vanilla JS, no framework)
 MILESTONE:    Gate 4 (Beta) PASSED · Gate 5 (Gold) NOT PASSED — 6 items outstanding
-UPDATED:      2026-08-30 (S2 fixes ticket — save-write hardening + single-instance lock)
+UPDATED:      2026-08-30 (S2 fixes shipped · repo under version control — first commit made)
 
 BURN:         ~22u this window · ~101u running total · see BURN.md
 
@@ -41,10 +41,10 @@ LAST DONE:    S2 FIXES TICKET (2026-08-30) — both S2 bugs from the audit close
     alongside the zip (104MB). Every previous build had emitted zip + win-unpacked only;
     the nsis target had never actually produced an installer in the sandbox. It builds fine
     on real Windows. This was the single biggest packaging gap and it is closed.
-  ✓ GIT IS UNBLOCKED. The repo was jammed by a stale 0-byte .git/index.lock dated 14 Aug —
-    debris from the failed sandbox git init. No git process was holding it. Removed. `git add`
-    now works; 42 files staged, clean (no node_modules, no build output). NOT committed —
-    that is Kevin's call, command in NEXT 3.
+  ✓ GIT IS UNBLOCKED AND COMMITTED. The repo was jammed by a stale 0-byte .git/index.lock
+    dated 14 Aug — debris from the failed sandbox git init. No git process was holding it.
+    Removed. First commit made on 2026-08-30: a626239, 42 files, branch master, no remote,
+    no node_modules or build output. Version control is no longer an outstanding item.
   ✓ .gitignore fixed: was `dist/` only, which does not match dist2/dist3/dist4 — a `git add .`
     would have committed ~310MB of superseded build output into the first commit. Now `dist*/`.
   ✓ Credits name corrected: "Kevin Forrester" → "Kevin Oxley" (src/index.html:967).
@@ -85,8 +85,8 @@ POLISH / HOUSEKEEPING (not gate blockers):
 NEXT 3:
   1. Kevin plays a full career on dist/win-unpacked/"Ashfall Fire Co.exe" — or installs via
      the new Setup .exe, which also tests the install path. This is gate item #1 and blocks Gold.
-  2. Make the first commit (repo is unblocked and staged):
-       git commit -m "Initial commit — Ashfall Fire Co. 1.0.0"
+  2. ✓ DONE — first commit made 2026-08-30 (a626239, 42 files, no build output or
+     node_modules). The project is finally under version control.
   3. Decide Endless Mode: cut the menu button for 1.0, or ship the COMING SOON screen.
      Then the S3 slider debounce — the only bug left open.
 
