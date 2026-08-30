@@ -1,0 +1,5 @@
+node_modules/
+dist/
+dist*/
+.fuse_hidden*
+*.log

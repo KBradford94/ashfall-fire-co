@@ -1,0 +1,45 @@
+{
+  "name": "ashfallfireco",
+  "version": "1.0.0",
+  "description": "Ashfall Fire Co. — Career Simulator",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "launch": "node_modules\\electron\\dist\\electron.exe .",
+    "build": "electron-builder --win",
+    "make-icon": "node make-icon.js"
+  },
+  "build": {
+    "appId": "com.ashfallgames.ashfallfireco",
+    "productName": "Ashfall Fire Co.",
+    "copyright": "Copyright © 2026 Ashfall Games",
+    "directories": { "output": "dist" },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "package.json",
+      "!src/data.js",
+      "!src/ui/hud.js",
+      "!**/.fuse_hidden*"
+    ],
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "zip", "arch": ["x64"] }],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ashfall Fire Co."
+    }
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^26.8.1"
+  }
+}

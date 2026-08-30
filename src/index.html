@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashfall Fire Co.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Custom title bar -->
+  <div id="titlebar">
+    <span id="titlebar-title">ASHFALL FIRE CO.</span>
+    <div id="titlebar-controls">
+      <button class="tb-btn" id="btn-mute" title="Toggle Sound">🔊</button>
+      <button class="tb-btn" id="btn-min" title="Minimize">&#8722;</button>
+      <button class="tb-btn" id="btn-max" title="Maximize">&#9633;</button>
+      <button class="tb-btn" id="btn-close" title="Close">&#10005;</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Main Menu ===== -->
+  <div id="screen-menu" class="screen active">
+    <div class="menu-bg">
+      <div class="fire-particles" id="fire-particles"></div>
+    </div>
+    <div class="menu-content">
+      <div class="badge-container">
+        <div class="badge">
+          <div class="badge-inner">
+            <div class="badge-star">★</div>
+            <div class="badge-number">12</div>
+            <div class="badge-text">ASHFALL FIRE DEPT</div>
+          </div>
+        </div>
+      </div>
+      <h1 class="game-title">ASHFALL <span class="title-accent">FIRE CO.</span></h1>
+      <p class="game-subtitle">Career Simulator</p>
+      <div class="menu-buttons">
+        <button class="menu-btn primary" id="btn-new-career">New Career</button>
+        <button class="menu-btn" id="btn-continue">Continue Career</button>
+        <button class="menu-btn" id="btn-load-game" disabled>Load Game</button>
+        <button class="menu-btn" id="btn-endless-mode">Endless Mode</button>
+        <button class="menu-btn" id="btn-settings">Settings</button>
+        <button class="menu-btn" id="btn-credits">Credits</button>
+        <button class="menu-btn danger" id="btn-erase">Erase Save</button>
+      </div>
+      <p class="menu-footer">Ashfall Fire Department · Engine 12 · Truck 7 · Squad 4 · Ambulance 9</p>
+      <p class="menu-footer app-version-display">v—</p>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: New Career ===== -->
+  <div id="screen-new-career" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" id="back-from-new">&larr; Back</button>
+      <h2 id="academy-intake-title">Academy Intake — Class of <span id="academy-intake-year">2026</span></h2>
+    </div>
+    <div class="new-career-content">
+      <div class="intake-form">
+        <div class="form-section">
+          <h3>Personal Information</h3>
+          <div class="form-row">
+            <label>Candidate Name</label>
+            <input type="text" id="career-name" value="" placeholder="Enter your name" maxlength="40" />
+          </div>
+          <div class="form-row">
+            <label>Background</label>
+            <div class="radio-group" id="background-group">
+              <label class="radio-card selected" data-bg="military">
+                <span class="rc-title">Military Veteran</span>
+                <span class="rc-desc">+10 Physical, +5 Leadership</span>
+              </label>
+              <label class="radio-card" data-bg="emt">
+                <span class="rc-title">EMT / Paramedic</span>
+                <span class="rc-desc">+10 Knowledge, +5 Morale</span>
+              </label>
+              <label class="radio-card" data-bg="athlete">
+                <span class="rc-title">Collegiate Athlete</span>
+                <span class="rc-desc">+12 Physical, +3 Morale</span>
+              </label>
+              <label class="radio-card" data-bg="civilian">
+                <span class="rc-title">Civilian</span>
+                <span class="rc-desc">+5 all stats (balanced)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h3>Starting Stats Preview</h3>
+          <div id="stat-preview" class="stat-preview-grid"></div>
+        </div>
+        <div class="form-section lore-section">
+          <div class="lore-box">
+            <p>"Every firefighter at 12 started where you're standing now. The question isn't whether you'll be tested — you will be. The question is what you're made of when you are."</p>
+            <cite>— Battalion Chief Wallace Whitfield</cite>
+          </div>
+        </div>
+        <button class="menu-btn primary wide" id="btn-to-career-path">Choose Career Track →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Career Path Selection ===== -->
+  <div id="screen-career-path" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" id="back-from-career-path">&larr; Back</button>
+      <h2>Choose Your Career Track</h2>
+    </div>
+    <div class="career-path-content">
+      <p class="career-path-intro">Your track shapes your academy, your unit assignment, and your story. You can cross between suppression and EMS later — but only through narrative events, never a menu.</p>
+      <div class="track-cards">
+        <div class="track-card" id="track-card-suppression" data-track="suppression">
+          <div class="track-header suppression-header">
+            <div class="track-icon-large">🔥</div>
+            <div class="track-name">Suppression</div>
+            <div class="track-sub">Engine · Truck · Squad</div>
+          </div>
+          <div class="track-body">
+            <p class="track-desc">The fireground is your domain. Structure fires, technical rescue, and the full weight of the front line.</p>
+            <div class="track-academy-info">
+              <div class="track-academy-label">FIRE ACADEMY</div>
+              <div class="track-academy-desc">Physical training · Hose ops · Search &amp; rescue · Written exam · Practical exam</div>
+            </div>
+            <div class="track-ranks-section">
+              <div class="track-ranks-label">Rank Path</div>
+              <div class="track-ranks-list">Probationary FF → Firefighter → Driver Engineer → Lieutenant → Captain → <strong>Battalion Chief</strong></div>
+            </div>
+            <div class="track-assignment">On graduation: randomised assignment to Engine 12 or Truck 7</div>
+          </div>
+        </div>
+        <div class="track-card" id="track-card-ems" data-track="ems">
+          <div class="track-header ems-header">
+            <div class="track-icon-large">🚑</div>
+            <div class="track-name">EMS</div>
+            <div class="track-sub">Ambulance 9</div>
+          </div>
+          <div class="track-body">
+            <p class="track-desc">Advanced life support. On Ambo 9 alongside Sorensen. Every patient is the only patient.</p>
+            <div class="track-academy-info">
+              <div class="track-academy-label ems-label">EMS ACADEMY</div>
+              <div class="track-academy-desc">Anatomy/pharm · Patient assessment · Cardiac arrest · Trauma scenarios · NREMT boards</div>
+            </div>
+            <div class="track-ranks-section">
+              <div class="track-ranks-label">Rank Path</div>
+              <div class="track-ranks-list">Paramedic Candidate → Paramedic → PIC → <strong>Paramedic Field Chief</strong></div>
+            </div>
+            <div class="track-assignment">On graduation: assigned to Ambulance 9 with Sorensen</div>
+          </div>
+        </div>
+      </div>
+      <button class="menu-btn primary" id="btn-start-track" disabled>Enter Academy →</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Academy ===== -->
+  <div id="screen-academy" class="screen">
+    <div id="academy-hud" class="top-hud">
+      <div class="hud-left">
+        <span class="hud-phase" id="academy-track-label">FIRE ACADEMY</span>
+        <span id="hud-name" class="hud-name"></span>
+      </div>
+      <div class="hud-stats" id="hud-stats"></div>
+    </div>
+    <div class="academy-content">
+      <div class="academy-sidebar">
+        <h3>Week <span id="academy-week">1</span> / 8</h3>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="academy-progress"></div>
+        </div>
+        <div class="academy-log" id="academy-log"></div>
+      </div>
+      <div class="academy-main">
+        <div id="academy-event-area"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Assignment Notification ===== -->
+  <div id="screen-assignment" class="screen">
+    <div class="assignment-content">
+      <div class="assignment-top">
+        <div class="assignment-badge-icon">📋</div>
+        <div class="assignment-letterhead">
+          <div class="assignment-dept">ASHFALL FIRE DEPARTMENT</div>
+          <div class="assignment-office">Office of Human Resources — Assignment Notification</div>
+        </div>
+      </div>
+      <div class="assignment-card" id="assignment-card"></div>
+      <button class="menu-btn primary assignment-btn" id="btn-accept-assignment">Report for Duty →</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Firehouse (Shift Phase) ===== -->
+  <div id="screen-firehouse" class="screen">
+    <div id="firehouse-hud" class="top-hud">
+      <div class="hud-left">
+        <span class="hud-phase" id="shift-phase-label">SHIFT</span>
+        <span id="shift-name" class="hud-name"></span>
+        <span id="shift-rank" class="hud-rank"></span>
+        <span id="shift-unit-badge" class="hud-unit-badge"></span>
+      </div>
+      <div class="hud-stats" id="shift-hud-stats"></div>
+      <div class="hud-whitfield">
+        <div class="hud-whitfield-label">CO TRUST</div>
+        <div class="hud-whitfield-bar-wrap">
+          <div class="hud-whitfield-bar" id="whitfield-trust-bar"></div>
+        </div>
+        <span class="hud-whitfield-val" id="whitfield-trust-val">50</span>
+      </div>
+      <div class="hud-right">
+        <span class="hud-shift-num">Shift <span id="shift-number">1</span></span>
+        <span class="hud-calls-label">Calls: <span id="hud-calls-count">0</span></span>
+        <button class="hud-btn" id="btn-roster">Roster</button>
+        <button class="hud-btn" id="btn-log">Log</button>
+        <button class="hud-btn" id="btn-transfer" style="display:none">Transfer</button>
+      </div>
+    </div>
+
+    <div class="firehouse-layout">
+      <div class="firehouse-floor" id="firehouse-floor">
+        <div class="floor-title">FIREHOUSE 12 — <span id="floor-shift-status">STANDBY</span></div>
+        <div id="complication-banner" class="complication-banner hidden"></div>
+        <!-- Probie standing bar (shown only at probie rank) -->
+        <div id="probie-standing-bar" class="probie-standing-wrap hidden">
+          <div class="probie-standing-label">PROBIE STANDING — Week <span id="probie-week-num">1</span></div>
+          <div class="probie-bar-outer"><div class="probie-bar-inner" id="probie-bar-inner"></div></div>
+          <div class="probie-standing-val"><span id="probie-score-val">0</span> / 100</div>
+        </div>
+        <!-- Hospital rapport bar (shown for EMS track) -->
+        <div id="hospital-rapport-bar" class="hospital-rapport-wrap hidden">
+          <div class="hospital-rapport-label">CRESTBRIDGE RAPPORT</div>
+          <div class="rapport-bar-outer"><div class="rapport-bar-inner" id="rapport-bar-inner"></div></div>
+          <div class="rapport-val"><span id="rapport-val">50</span></div>
+        </div>
+        <div class="rooms-grid" id="rooms-grid">
+          <div class="room" id="room-drill" data-action="drill">
+            <div class="room-icon">🚒</div>
+            <div class="room-name">Apparatus Bay</div>
+            <div class="room-sub">Company Drill</div>
+          </div>
+          <div class="room" id="room-gym" data-action="gym">
+            <div class="room-icon">💪</div>
+            <div class="room-name">Gym</div>
+            <div class="room-sub">Fitness Training</div>
+          </div>
+          <div class="room" id="room-kitchen" data-action="meal">
+            <div class="room-icon">🍳</div>
+            <div class="room-name">Kitchen</div>
+            <div class="room-sub">Crew Meal</div>
+          </div>
+          <div class="room" id="room-office" data-action="study">
+            <div class="room-icon">📋</div>
+            <div class="room-name">Watch Office</div>
+            <div class="room-sub">Study SOGs</div>
+          </div>
+          <div class="room" id="room-bunkroom" data-action="paperwork">
+            <div class="room-icon">🗂️</div>
+            <div class="room-name">Bunk Room</div>
+            <div class="room-sub">Paperwork</div>
+          </div>
+          <!-- Rank-specific room slots (populated dynamically) -->
+          <div class="room rank-room hidden" id="room-rank-a" data-action="">
+            <div class="room-icon" id="rank-room-a-icon">⭐</div>
+            <div class="room-name" id="rank-room-a-name">Rank Action</div>
+            <div class="room-sub" id="rank-room-a-sub">Rank specific</div>
+          </div>
+          <div class="room dispatch-room" id="room-dispatch" data-action="dispatch">
+            <div class="room-icon">📡</div>
+            <div class="room-name">Dispatch</div>
+            <div class="room-sub">Respond to Call</div>
+          </div>
+        </div>
+        <div class="shift-actions-remaining">
+          Actions remaining: <span id="actions-remaining">3</span>
+        </div>
+        <button class="menu-btn end-shift-btn" id="btn-end-shift">End Shift</button>
+      </div>
+      <div class="firehouse-feed">
+        <div class="feed-header">SHIFT ACTIVITY</div>
+        <div id="shift-feed" class="feed-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Call Dispatch (3-step IC) ===== -->
+  <div id="screen-call" class="screen">
+    <div class="call-overlay">
+      <div id="call-alert-bar" class="call-alert-bar">
+        <span class="alert-icon">🚨</span>
+        <span id="call-alert-text">STRUCTURE FIRE</span>
+        <span class="alert-icon">🚨</span>
+      </div>
+      <div class="call-content">
+        <!-- LEFT COLUMN -->
+        <div class="call-left">
+          <div class="call-incident-card" id="call-incident-card">
+            <div class="call-type-badge" id="call-type-badge">STRUCTURE FIRE</div>
+            <div class="call-address" id="call-address"></div>
+            <div class="call-details" id="call-details"></div>
+            <div class="call-units" id="call-units"></div>
+          </div>
+          <div class="ashfall-map-wrap">
+            <div class="map-label">INCIDENT LOCATION</div>
+            <div id="ashfall-map-container"></div>
+          </div>
+          <!-- STEP 1: SIZE-UP -->
+          <div id="call-step-1" class="call-step">
+            <div class="step-header"><span class="step-num">STEP 1 / 3</span> — INCIDENT SIZE-UP</div>
+            <div id="sizeup-choices" class="step-choices"></div>
+          </div>
+          <!-- STEP 2: CREW ASSIGNMENT -->
+          <div id="call-step-2" class="call-step hidden">
+            <div class="step-header"><span class="step-num">STEP 2 / 3</span> — CREW ASSIGNMENT</div>
+            <p class="step-sub">Select up to 2 crew members. Confident crew boost your roll; Fatigued crew reduce it.</p>
+            <div id="crew-assignment-grid" class="crew-assign-grid"></div>
+            <button id="btn-confirm-crew" class="menu-btn primary" style="margin-top:10px" disabled>Assign &amp; Continue →</button>
+          </div>
+          <!-- STEP 3: TACTICAL CHOICE -->
+          <div id="call-step-3" class="call-step hidden">
+            <div class="step-header"><span class="step-num">STEP 3 / 3</span> — TACTICAL APPROACH</div>
+            <div id="tactical-choices" class="step-choices"></div>
+          </div>
+          <!-- SHADOW MODE (probie / ems_candidate) -->
+          <div id="call-shadow" class="call-step hidden">
+            <div class="step-header"><span class="step-num shadow-tag">SHADOW MODE</span> — <span id="shadow-crew-label">following [crew]</span></div>
+            <div class="shadow-assignment-banner" id="shadow-assignment-banner"></div>
+            <div class="shadow-choices" id="shadow-choices"></div>
+          </div>
+
+          <!-- FF ROLE EXECUTION -->
+          <div id="call-role" class="call-step hidden">
+            <div class="step-header"><span class="step-num">ROLE ASSIGNED</span> — YOUR ORDERS FROM THE LT</div>
+            <div class="role-assignment-card" id="role-assignment-card"></div>
+            <div class="role-choices" id="role-choices"></div>
+          </div>
+
+          <!-- DE APPARATUS MODE -->
+          <div id="call-de" class="call-step hidden">
+            <div class="step-header"><span class="step-num">APPARATUS OFFICER</span> — EXTERIOR OPERATIONS</div>
+            <div class="de-exterior-banner" id="de-exterior-banner"></div>
+            <div id="de-step-pump" class="de-sub-step">
+              <div class="de-step-label">PUMP PRESSURE</div>
+              <div class="de-pump-choices" id="de-pump-choices"></div>
+            </div>
+            <div id="de-step-position" class="de-sub-step hidden">
+              <div class="de-step-label" id="de-step-position-label">AERIAL POSITIONING</div>
+              <div class="de-pump-choices" id="de-position-choices"></div>
+            </div>
+          </div>
+
+          <!-- EMS DIAGNOSTIC MODE -->
+          <div id="call-ems-diag" class="call-step hidden">
+            <div class="step-header"><span class="step-num ems-step-tag">EMS</span> — <span id="ems-diag-step-label">PATIENT PRESENTATION</span></div>
+            <div class="ems-patient-card" id="ems-patient-card"></div>
+            <div id="ems-diag-choices" class="step-choices"></div>
+          </div>
+
+          <!-- CAPTAIN COMMAND BOARD -->
+          <div id="call-captain-board" class="call-step hidden">
+            <div class="step-header"><span class="step-num captain-tag">CAPTAIN — COMMAND</span></div>
+            <div class="captain-board-intro" id="captain-board-intro"></div>
+            <div id="captain-sector-choices" class="step-choices"></div>
+            <div class="captain-company-panels" id="captain-company-panels"></div>
+          </div>
+
+          <!-- BC STRATEGIC BOARD -->
+          <div id="call-bc-board" class="call-step hidden">
+            <div class="step-header"><span class="step-num bc-tag">BATTALION CHIEF — INCIDENT COMMAND</span></div>
+            <div class="bc-board-intro" id="bc-board-intro"></div>
+            <div id="bc-command-choices" class="step-choices"></div>
+            <div class="bc-status-row" id="bc-status-row"></div>
+          </div>
+
+          <!-- RADIO DIALOGUE (always visible after dispatch) -->
+          <div class="call-dialogue" id="call-dialogue"></div>
+        </div>
+        <!-- RIGHT COLUMN -->
+        <div class="call-right">
+          <div class="call-stats-preview" id="call-stats-preview"></div>
+          <div id="selection-summary" class="selection-summary hidden"></div>
+          <div class="dice-arena hidden" id="dice-arena">
+            <div class="dice-label">ROLL TO RESPOND</div>
+            <div class="dice-container" id="dice-container">
+              <div class="die" id="die1">?</div>
+              <div class="die" id="die2">?</div>
+            </div>
+            <div id="dice-modifier-label" class="dice-mod-label"></div>
+            <button class="roll-btn" id="btn-roll">ROLL</button>
+          </div>
+          <div class="outcome-panel hidden" id="outcome-panel">
+            <div class="outcome-label" id="outcome-label"></div>
+            <div class="outcome-desc" id="outcome-desc"></div>
+            <div class="outcome-stats" id="outcome-stats"></div>
+            <button class="menu-btn primary" id="btn-return-to-shift">Return to Firehouse</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Shift Summary ===== -->
+  <div id="screen-summary" class="screen">
+    <div class="summary-content">
+      <div class="summary-header">
+        <div class="summary-title-row">
+          <h2 class="summary-title">SHIFT <span id="summary-shift-num">1</span> DEBRIEF</h2>
+          <div class="summary-grade-badge" id="summary-grade">A</div>
+        </div>
+        <p class="summary-grade-label" id="summary-grade-label">Outstanding</p>
+      </div>
+      <div class="summary-body">
+        <div class="summary-col">
+          <div class="summary-section">
+            <h4>STAT CHANGES</h4>
+            <div id="summary-stat-changes"></div>
+          </div>
+          <div class="summary-section">
+            <h4>SHIFT HIGHLIGHTS</h4>
+            <div id="summary-highlights"></div>
+          </div>
+        </div>
+        <div class="summary-col">
+          <div class="summary-section">
+            <h4>CURRENT STANDING</h4>
+            <div id="summary-current-stats"></div>
+          </div>
+          <div class="summary-section crew-reaction-section">
+            <h4>CREW REACTION</h4>
+            <div class="crew-reaction-bubble" id="crew-reaction-bubble"></div>
+          </div>
+        </div>
+      </div>
+      <button class="menu-btn primary summary-continue-btn" id="btn-to-offduty">48 Hours Off-Duty →</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Off-Duty ===== -->
+  <div id="screen-offduty" class="screen">
+    <div class="offduty-content">
+      <div class="offduty-header">
+        <div class="offduty-clock">48:00</div>
+        <h2 class="offduty-title">OFF-DUTY</h2>
+        <p class="offduty-sub">Shift <span id="offduty-shift-num">1</span> complete. Next shift begins in 48 hours.</p>
+      </div>
+      <div class="offduty-locations">
+        <div class="location-card" id="loc-firebell" data-loc="firebell">
+          <div class="loc-icon">🍺</div>
+          <div class="loc-name">The Firebell Bar</div>
+          <div class="loc-desc">Catch up with the crew. Build bonds. Unwind after the shift.</div>
+          <div class="loc-effects">
+            <span class="loc-effect pos">+10 Morale</span>
+            <span class="loc-effect pos">+5 Bond (random crew)</span>
+            <span class="loc-effect dim">Chance: story event</span>
+          </div>
+        </div>
+        <div class="location-card" id="loc-home" data-loc="home">
+          <div class="loc-icon">🏠</div>
+          <div class="loc-name">Home</div>
+          <div class="loc-desc">Full rest. Recharge completely before the next shift.</div>
+          <div class="loc-effects">
+            <span class="loc-effect pos">+15 Morale</span>
+            <span class="loc-effect pos">+5 Physical</span>
+          </div>
+        </div>
+        <div class="location-card" id="loc-training" data-loc="training">
+          <div class="loc-icon">🏋️</div>
+          <div class="loc-name">Training Facility</div>
+          <div class="loc-desc">Push yourself on your days off. The gap between average and great.</div>
+          <div class="loc-effects">
+            <span class="loc-effect pos">+10 Physical</span>
+            <span class="loc-effect pos">+5 Knowledge</span>
+            <span class="loc-effect neg">-5 Morale</span>
+          </div>
+        </div>
+      </div>
+      <div class="offduty-hud">
+        <div id="offduty-stats" class="offduty-stat-row"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Shift Briefing / Complications ===== -->
+  <div id="modal-briefing" class="modal hidden">
+    <div class="modal-box briefing-box">
+      <div class="modal-header">
+        <h3>SHIFT BRIEFING</h3>
+      </div>
+      <div id="briefing-content" class="briefing-content"></div>
+      <button class="menu-btn primary" id="btn-start-shift" style="margin:0 24px 24px">Roll Call →</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Roster Panel ===== -->
+  <div id="modal-roster" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Firehouse 12 Roster</h3>
+        <button class="modal-close" id="close-roster">✕</button>
+      </div>
+      <div id="roster-grid" class="roster-grid"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Shift Log ===== -->
+  <div id="modal-log" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Shift Log</h3>
+        <button class="modal-close" id="close-log">✕</button>
+      </div>
+      <div id="log-content" class="log-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Promotion ===== -->
+  <div id="modal-promotion" class="modal hidden">
+    <div class="modal-box promotion-box">
+      <div class="modal-header">
+        <h3>Promotion</h3>
+      </div>
+      <div id="promotion-content" class="promotion-content"></div>
+      <button class="menu-btn primary" id="btn-accept-promotion">Accept Promotion</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Crew Event ===== -->
+  <div id="modal-crew-event" class="modal hidden">
+    <div class="modal-box crew-event-box">
+      <div class="crew-event-portrait-area" id="crew-event-portrait-area"></div>
+      <div class="crew-event-body">
+        <div class="crew-event-header">
+          <span class="crew-event-tag" id="crew-event-tag">CREW EVENT</span>
+          <span class="crew-event-title" id="crew-event-title"></span>
+        </div>
+        <p class="crew-event-desc" id="crew-event-desc"></p>
+        <div class="speech-bubble" id="crew-event-speech"></div>
+        <div class="crew-event-choices" id="crew-event-choices"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Unit Transfer ===== -->
+  <div id="modal-unit-transfer" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Unit Transfer Request</h3>
+      </div>
+      <div class="unit-transfer-content">
+        <p class="unit-transfer-intro">As a Lieutenant, you can request a unit assignment. Transfers between suppression companies require no retraining — switching to EMS requires a narrative event.</p>
+        <div class="unit-cards" id="unit-cards">
+          <div class="unit-card" data-unit="Truck 7">
+            <div class="unit-card-badge">81</div>
+            <div class="unit-card-name">Truck 7</div>
+            <div class="unit-card-desc">Structure fires, high-rise, rescue. Delgado's command.</div>
+            <div class="unit-card-stats">Physical · Leadership</div>
+          </div>
+          <div class="unit-card" data-unit="Squad 4">
+            <div class="unit-card-badge">3</div>
+            <div class="unit-card-name">Squad 4</div>
+            <div class="unit-card-desc">Technical rescue, water, trench, collapse. Kessler's domain.</div>
+            <div class="unit-card-stats">Physical · Knowledge</div>
+          </div>
+          <div class="unit-card" data-unit="Engine 12">
+            <div class="unit-card-badge">12</div>
+            <div class="unit-card-name">Engine 12</div>
+            <div class="unit-card-desc">Suppression, gas, electrical, wildland. Whitaker's home.</div>
+            <div class="unit-card-stats">Knowledge · Leadership</div>
+          </div>
+        </div>
+      </div>
+      <button class="menu-btn" id="btn-stay-unit" style="margin:0 24px 24px">Stay on Current Unit</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Performance Review ===== -->
+  <div id="modal-performance-review" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Performance Review</h3>
+      </div>
+      <div id="performance-review-content" class="debrief-content"></div>
+      <div id="performance-review-choices" style="padding:0 24px 24px;display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Load Game (slot picker) ===== -->
+  <div id="screen-load-game" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" id="back-from-load">&larr; Back</button>
+      <h2>Load Career</h2>
+    </div>
+    <div class="load-game-content">
+      <div class="save-slots-grid" id="load-slots-grid"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Save / Load Menu (in-game, Escape) ===== -->
+  <div id="modal-save-load" class="modal hidden">
+    <div class="modal-box save-load-box">
+      <div class="modal-header">
+        <h3>SAVE / LOAD</h3>
+        <button class="modal-close" id="close-save-load">✕</button>
+      </div>
+      <div class="save-load-body">
+        <div class="save-load-section">
+          <div class="save-load-section-label">AUTOSAVE</div>
+          <div class="autosave-info" id="autosave-info">Auto-saves at end of each shift.</div>
+        </div>
+        <div class="save-load-section">
+          <div class="save-load-section-label">MANUAL SLOTS</div>
+          <div class="save-slots-grid" id="ingame-slots-grid"></div>
+        </div>
+        <div class="save-load-section">
+          <div class="save-load-section-label">DIFFICULTY</div>
+          <div class="difficulty-row" id="difficulty-row"></div>
+          <div class="difficulty-desc" id="difficulty-desc"></div>
+        </div>
+        <button class="menu-btn" id="btn-career-record" style="width:100%;margin-top:8px">📜 Career Record</button>
+        <button class="menu-btn" id="btn-resume-from-save" style="width:100%;margin-top:8px">Resume Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Exam Eligible Notification ===== -->
+  <div id="modal-exam-eligible" class="modal hidden">
+    <div class="modal-box exam-eligible-box">
+      <div class="modal-header">
+        <h3>CIVIL SERVICE EXAMINATION</h3>
+      </div>
+      <div class="exam-eligible-body">
+        <div class="exam-eligible-rank-icon" id="exam-eligible-icon">⭐</div>
+        <div class="exam-eligible-rank" id="exam-eligible-rank">Lieutenant's Exam</div>
+        <div class="exam-eligible-desc" id="exam-eligible-desc">You meet the minimum requirements to sit the Lieutenant's civil service examination. You can take the exam at any time — but preparation matters. Use Exam Prep sessions to raise your readiness. The higher your readiness, the better your odds on each question.</div>
+        <div class="exam-prep-status">
+          <div class="exam-prep-label">EXAM READINESS</div>
+          <div class="exam-prep-bar-outer"><div class="exam-prep-bar-inner" id="exam-prep-bar-pre" style="width:0%"></div></div>
+          <div class="exam-prep-val"><span id="exam-prep-val-pre">0</span>%</div>
+        </div>
+      </div>
+      <button class="menu-btn primary" id="btn-acknowledge-exam">Understood →</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Exam Start Confirmation ===== -->
+  <div id="modal-exam-start" class="modal hidden">
+    <div class="modal-box exam-eligible-box">
+      <div class="modal-header">
+        <h3>CIVIL SERVICE EXAMINATION</h3>
+        <div id="exam-start-title" style="font-size:13px;color:var(--text-secondary);margin-top:2px;"></div>
+      </div>
+      <div class="exam-eligible-body">
+        <div class="exam-prep-status">
+          <div class="exam-prep-label">YOUR READINESS</div>
+          <div class="exam-prep-bar-outer"><div class="exam-prep-bar-inner" id="exam-start-readiness-bar" style="width:0%"></div></div>
+          <div class="exam-prep-val"><span id="exam-start-readiness-val">0</span>%</div>
+        </div>
+        <div class="exam-eligible-desc" id="exam-start-flavour" style="margin-top:8px;font-style:italic;"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:0 24px 24px">
+        <button class="menu-btn primary" id="btn-exam-start-confirm">Take the Exam →</button>
+        <button class="menu-btn" id="btn-exam-start-prep">📚 Prep Session (+25%) — uses 1 action</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Written Exam ===== -->
+  <div id="modal-exam-written" class="modal hidden">
+    <div class="modal-box exam-box">
+      <div class="modal-header">
+        <h3 id="exam-written-title">WRITTEN EXAMINATION</h3>
+        <span class="exam-progress-badge" id="exam-q-progress">Q 1 / 10</span>
+      </div>
+      <div class="exam-written-body">
+        <div class="exam-q-text" id="exam-q-text"></div>
+        <div class="exam-q-options" id="exam-q-options"></div>
+        <div class="exam-q-feedback hidden" id="exam-q-feedback"></div>
+      </div>
+      <div class="exam-written-footer">
+        <div class="exam-score-track">Score: <span id="exam-running-score">0</span> / <span id="exam-total-q">10</span></div>
+        <button class="menu-btn primary" id="btn-exam-next" disabled>Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Oral Board ===== -->
+  <div id="modal-exam-oral" class="modal hidden">
+    <div class="modal-box exam-box">
+      <div class="modal-header">
+        <h3>ORAL BOARD</h3>
+        <span class="exam-progress-badge" id="oral-q-progress">Q 1 / 3</span>
+      </div>
+      <div class="oral-board-body">
+        <div class="oral-panelist" id="oral-panelist"></div>
+        <div class="oral-q-text" id="oral-q-text"></div>
+        <div class="oral-q-choices" id="oral-q-choices"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Exam Result ===== -->
+  <div id="modal-exam-result" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>EXAMINATION RESULT</h3>
+      </div>
+      <div class="exam-result-body" id="exam-result-body"></div>
+      <button class="menu-btn primary" id="btn-exam-result-ok" style="margin:0 24px 24px">Continue</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Vacancy / Assignment ===== -->
+  <div id="modal-vacancy" class="modal hidden">
+    <div class="modal-box vacancy-box">
+      <div class="modal-header">
+        <h3>ASSIGNMENT NOTICE</h3>
+      </div>
+      <div class="vacancy-body" id="vacancy-body"></div>
+      <button class="menu-btn primary" id="btn-accept-vacancy" style="margin:0 24px 24px">Accept Assignment →</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Promotion Ceremony ===== -->
+  <div id="modal-promo-ceremony" class="modal hidden">
+    <div class="modal-box promo-ceremony-box">
+      <div class="promo-ceremony-header">
+        <div class="promo-ceremony-badge-ring">
+          <div class="promo-ceremony-badge-inner" id="promo-ceremony-badge">★</div>
+        </div>
+        <div class="promo-ceremony-rank" id="promo-ceremony-rank">LIEUTENANT</div>
+        <div class="promo-ceremony-company" id="promo-ceremony-company">Engine 12</div>
+      </div>
+      <div class="promo-ceremony-body" id="promo-ceremony-body"></div>
+      <div class="promo-ceremony-crew" id="promo-ceremony-crew"></div>
+      <button class="menu-btn primary promo-ceremony-btn" id="btn-promo-ceremony-done">Report for Duty →</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: LT Drill Focus ===== -->
+  <div id="modal-lt-drill" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>RUN COMPANY DRILL — CHOOSE FOCUS</h3>
+      </div>
+      <p style="padding:12px 24px 0;font-size:13px;color:var(--text-secondary)">As Lieutenant, you design and lead the drill. Choose your focus for this session.</p>
+      <div class="drill-types-grid" id="drill-types-grid"></div>
+      <div style="padding:0 24px 24px">
+        <button class="menu-btn primary wide" id="btn-confirm-drill" disabled>Run This Drill →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Counsel Crew Member ===== -->
+  <div id="modal-counsel-crew" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>COUNSEL CREW MEMBER</h3>
+      </div>
+      <div style="padding:16px 24px 0">
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Select a crew member and approach. Works best when a member is Fatigued or Conflicted.</p>
+        <div id="counsel-crew-list" class="counsel-crew-list"></div>
+      </div>
+      <div style="padding:12px 24px 0">
+        <div class="counsel-approaches" id="counsel-approaches" style="display:none">
+          <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px">YOUR APPROACH</div>
+          <div id="counsel-approach-options" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+      </div>
+      <div style="padding:8px 24px 24px">
+        <button class="menu-btn primary wide" id="btn-confirm-counsel" disabled>Have the Conversation →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Officer Review (post-call accountability) ===== -->
+  <div id="modal-officer-review" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>OFFICER REVIEW</h3>
+      </div>
+      <div id="officer-review-content" style="padding:20px 24px;display:flex;flex-direction:column;gap:14px">
+        <p class="officer-review-desc" id="officer-review-desc"></p>
+        <div class="speech-bubble" id="officer-review-speech"></div>
+        <div id="officer-review-choices" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Probie Tasks ===== -->
+  <div id="modal-probie-tasks" class="modal hidden">
+    <div class="modal-box probie-box">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h3>MORNING PROBIE DUTIES</h3>
+          <span class="modal-sub">Complete all tasks before your shift begins.</span>
+        </div>
+        <span class="probie-eval-badge">WEEK <span id="probie-task-week">1</span></span>
+      </div>
+      <div class="probie-tasks-list" id="probie-tasks-list"></div>
+      <div class="probie-tasks-footer">
+        <div class="probie-skip-warn" id="probie-skip-warn" style="display:none">⚠ Skipping tasks costs crew bond and CO trust.</div>
+        <button class="menu-btn primary" id="btn-complete-probie-tasks">Begin Shift →</button>
+        <button class="menu-btn" id="btn-skip-probie-tasks">Skip Tasks (–Reputation –Bond)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Specialist Training Choice ===== -->
+  <div id="modal-specialist" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>CHOOSE YOUR SPECIALTY</h3>
+      </div>
+      <div class="specialist-intro">
+        <p>You've proven yourself on the line. Now choose the path you want to master. This decision shapes your call modifiers and advancement — it can only be made once.</p>
+      </div>
+      <div class="specialist-cards" id="specialist-cards"></div>
+      <div style="padding:0 24px 24px">
+        <button class="menu-btn primary wide" id="btn-confirm-specialist" disabled>Commit to This Specialty →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: DE Apparatus Check ===== -->
+  <div id="modal-apparatus" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>PRE-SHIFT APPARATUS CHECK</h3>
+        <span class="modal-sub">Inspect all systems before the shift begins.</span>
+      </div>
+      <div class="apparatus-list" id="apparatus-list"></div>
+      <div class="apparatus-footer">
+        <div class="apparatus-faults" id="apparatus-faults"></div>
+        <button class="menu-btn primary" id="btn-apparatus-done">Clear for Service →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: LT Shift Tone ===== -->
+  <div id="modal-lt-tone" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>PRE-SHIFT CREW BRIEFING</h3>
+      </div>
+      <div class="lt-tone-intro">
+        <p>As Lieutenant, you set the tone for the shift. Your crew will respond to your lead.</p>
+      </div>
+      <div class="lt-tone-options" id="lt-tone-options"></div>
+      <div style="padding:0 24px 24px">
+        <button class="menu-btn primary wide" id="btn-confirm-lt-tone" disabled>Set Tone & Roll Call →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Captain AFD Briefing ===== -->
+  <div id="modal-captain-briefing" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>MORNING AFD BRIEFING</h3>
+      </div>
+      <div class="captain-directive-box" id="captain-directive-box"></div>
+      <div class="captain-briefing-choices" id="captain-briefing-choices"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: BC District Staffing ===== -->
+  <div id="modal-bc-district" class="modal hidden">
+    <div class="modal-box bc-box">
+      <div class="modal-header">
+        <h3>DISTRICT STAFFING — SHIFT START</h3>
+      </div>
+      <p class="bc-district-intro">Review your district. Address any vacancies before the shift goes live.</p>
+      <div class="bc-stations-grid" id="bc-stations-grid"></div>
+      <div class="bc-vacancy-panel hidden" id="bc-vacancy-panel">
+        <div class="bc-vacancy-title">Vacancy at <span id="bc-vacancy-station"></span></div>
+        <div class="bc-vacancy-choices" id="bc-vacancy-choices"></div>
+      </div>
+      <div style="padding:0 24px 24px">
+        <button class="menu-btn primary" id="btn-bc-district-done">Confirm Assignments →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Sorensen Debrief ===== -->
+  <div id="modal-sorensen-debrief" class="modal hidden">
+    <div class="modal-box crew-event-box">
+      <div class="crew-event-portrait-area">
+        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" width="90" height="90">
+          <circle cx="45" cy="45" r="42" fill="#192033" stroke="#3b82f6" stroke-width="3"/>
+          <text x="45" y="53" font-size="24" font-weight="700" fill="#3b82f6" text-anchor="middle" font-family="Segoe UI">SB</text>
+        </svg>
+      </div>
+      <div class="crew-event-body">
+        <div class="crew-event-header">
+          <span class="crew-event-tag ems-tag">SORENSEN DEBRIEF</span>
+          <span class="crew-event-title" id="sorensen-debrief-title">Post-Call Assessment</span>
+        </div>
+        <div class="speech-bubble" id="sorensen-debrief-speech"></div>
+        <div class="crew-event-choices" id="sorensen-debrief-choices"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Crew Conflict (LT) ===== -->
+  <div id="modal-crew-conflict" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="conflict-modal-title">CONFLICT — LIEUTENANT DECISION</h3>
+      </div>
+      <div id="crew-conflict-content" style="padding:20px 24px;display:flex;flex-direction:column;gap:16px;overflow-y:auto">
+        <p class="conflict-desc" id="conflict-desc"></p>
+        <div class="speech-bubble" id="conflict-speech"></div>
+        <div id="conflict-choices" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: BC Legacy Event ===== -->
+  <div id="modal-bc-legacy" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>BATTALION CHIEF — COMMAND DECISION</h3>
+      </div>
+      <div id="bc-legacy-content" style="padding:20px 24px;display:flex;flex-direction:column;gap:16px;overflow-y:auto">
+        <div class="bc-legacy-desc" id="bc-legacy-desc"></div>
+        <div id="bc-legacy-choices" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+      <div class="bc-legacy-footer">
+        <div class="bc-legacy-stat">Legacy Score: <span id="bc-legacy-score" class="bc-legacy-val">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Settings ===== -->
+  <div id="modal-settings" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>SETTINGS</h3>
+        <button class="modal-close" id="close-settings">✕</button>
+      </div>
+      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:18px">
+        <div>
+          <div class="save-load-section-label" style="margin-bottom:8px">MASTER VOLUME</div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <input type="range" id="settings-volume-slider" min="0" max="100" value="70" style="flex:1" />
+            <span id="settings-volume-val" style="min-width:28px;text-align:right;font-family:var(--font-mono);color:var(--text-secondary)">70</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="settings-mute-checkbox" />
+          <label for="settings-mute-checkbox" style="font-size:13px;color:var(--text-secondary)">Mute all sound</label>
+        </div>
+        <div class="difficulty-desc" style="margin-top:0">Ashfall Fire Co. <span class="app-version-display">v—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Credits ===== -->
+  <div id="modal-credits" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>CREDITS</h3>
+        <button class="modal-close" id="close-credits">✕</button>
+      </div>
+      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--text-secondary)">
+        <p><strong style="color:var(--text-primary)">Ashfall Fire Co. — Career Simulator</strong><br/>
+        <span class="app-version-display">v—</span> · Copyright © 2026 Ashfall Games</p>
+        <p>Design, writing, and development by Kevin Oxley.</p>
+        <p>Built with Electron. Sound synthesized with the Web Audio API — no external audio assets.</p>
+        <p style="color:var(--text-dim);font-size:11.5px">Thanks for playing Firehouse 12.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DEV CONSOLE ===== -->
+  <div id="dev-console" class="dev-console hidden">
+    <div class="dev-console-header">
+      <span class="dev-console-title">[ DEV CONSOLE ]</span>
+      <span class="dev-mode-badge">DEV MODE</span>
+      <button id="dev-console-close">✕</button>
+    </div>
+    <div id="dev-console-output" class="dev-console-output"></div>
+    <div class="dev-console-input-row">
+      <span class="dev-prompt">&gt;</span>
+      <input type="text" id="dev-console-input" class="dev-console-input"
+             placeholder="help — list commands  |  Tab to autocomplete"
+             autocomplete="off" spellcheck="false" />
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Endless Mode ===== -->
+  <div id="screen-endless" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" id="back-from-endless">&larr; Back</button>
+      <h2>Endless Mode</h2>
+    </div>
+    <div class="endless-content">
+      <div class="endless-intro">
+        <p class="endless-coming-soon">COMING SOON</p>
+        <p class="endless-desc">Run calls with any era of Firehouse 12 — no career progression, no academy. Pure incident command from the first tone.</p>
+      </div>
+      <div class="endless-era-grid">
+        <div class="era-card era-locked">
+          <div class="era-badge">S01–S04</div>
+          <div class="era-title">The Delgado Era</div>
+          <div class="era-subtitle">Truck 7 under Captain Delgado</div>
+          <div class="era-lock">🔒 Coming Soon</div>
+        </div>
+        <div class="era-card era-locked">
+          <div class="era-badge">S05–S08</div>
+          <div class="era-title">The Kade Years</div>
+          <div class="era-subtitle">12 at full strength — the golden era</div>
+          <div class="era-lock">🔒 Coming Soon</div>
+        </div>
+        <div class="era-card era-locked">
+          <div class="era-badge">S09–S11</div>
+          <div class="era-title">The Kessler Arc</div>
+          <div class="era-subtitle">Squad 4 leads — rescue-heavy operations</div>
+          <div class="era-lock">🔒 Coming Soon</div>
+        </div>
+        <div class="era-card era-locked">
+          <div class="era-badge">S12–S13</div>
+          <div class="era-title">Transition Period</div>
+          <div class="era-subtitle">New leadership, new faces</div>
+          <div class="era-lock">🔒 Coming Soon</div>
+        </div>
+        <div class="era-card era-locked">
+          <div class="era-badge">S14</div>
+          <div class="era-title">Kade's House</div>
+          <div class="era-subtitle">Delgado on Truck 7 · Tibbets on Engine · Priya on Ambo</div>
+          <div class="era-lock">🔒 Coming Soon</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v2: Career Record modal -->
+  <div id="modal-career-record" class="modal hidden">
+    <div class="modal-box career-record-box">
+      <div class="modal-header">
+        <h3>CAREER RECORD</h3>
+        <button class="modal-close" id="close-career-record">✕</button>
+      </div>
+      <div class="career-record-body">
+        <div class="career-record-stats" id="career-record-stats"></div>
+        <div id="career-record-condition" class="career-record-condition"></div>
+        <div id="career-record-commendations" class="career-record-commendations"></div>
+        <div id="career-record-memorial" class="career-record-memorial"></div>
+        <div class="save-load-section-label" style="margin-top:14px">TIMELINE</div>
+        <div id="career-record-timeline" class="career-record-timeline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- v2: Dynamic incident stage modal -->
+  <div id="modal-incident-stage" class="modal hidden">
+    <div class="modal-box incident-stage-box">
+      <div class="incident-stage-header">
+        <span id="incident-stage-title" class="incident-stage-title">DEVELOPMENT</span>
+        <div id="incident-stage-timer-wrap" class="incident-timer-wrap"><div id="incident-stage-timer" class="incident-timer-bar"></div></div>
+      </div>
+      <div id="incident-stage-victim" class="incident-victim-pill"></div>
+      <div id="incident-stage-text" class="incident-stage-text"></div>
+      <div id="incident-stage-choices" class="incident-stage-choices"></div>
+      <div id="incident-stage-note" class="incident-stage-note hidden"></div>
+    </div>
+  </div>
+
+  <!-- Transient failure notices (save errors). Never blocks input. -->
+  <div id="toast-stack" class="toast-stack" aria-live="assertive"></div>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>
