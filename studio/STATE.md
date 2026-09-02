@@ -1,15 +1,33 @@
 ════ STUDIO STATE ════
 PROJECT:      Ashfall Fire Co. · Electron (vanilla JS, no framework)
 MILESTONE:    Gate 4 (Beta) PASSED · Gate 5 (Gold) NOT PASSED — 6 items outstanding
-UPDATED:      2026-09-02 (S3 fixed · bug list now empty · test suite added)
+UPDATED:      2026-09-02 (Endless Mode cut · dev console stripped · bug list empty)
 
-BURN:         ~30u this window · ~109u running total · see BURN.md
+BURN:         ~38u this window · ~117u running total · see BURN.md
 
 ARTEFACTS:    CHARTER v1 · PILLARS v1 · ARCHITECTURE v2 · SAVE v2 · BUDGET v1 · ECONOMY v1
               · BACKLOG v2 · BUGS v3 · COMMITMENTS v2 · ASSUMPTIONS v1
               · BUILD 1.0.0 — dist/ (installer + zip, built 2026-08-29 on real Windows)
 
-LAST DONE:    S3 FIX + TEST SUITE (2026-09-02):
+LAST DONE:    SCOPE CUTS (2026-09-02) — both of Kevin's calls executed:
+
+  ✓ Endless Mode CUT. Menu button, #screen-endless markup, click handler and the
+    ENDLESS MODE SCREEN CSS block all removed. The main menu is now New Career /
+    Continue / Load / Settings / Credits / Erase — every item does something.
+  ✓ Dev console STRIPPED. The 178-line DevConsole module, its markup, its CSS, the
+    backtick keybinding and all eight dev helper functions are gone. No godmode,
+    no setrank, no maxstats in the shipped build.
+    Surfaced a real bug in the process: the "FIX NOW" apparatus-fault button's only
+    feedback when out of actions was a DevConsole.log() line the player could never
+    see — pressing it did nothing visible. Now a warning toast plus a failure sting.
+  ✓ Verified: shipped asar has no DevConsole, no godmode, no backtick handler, no
+    dev or endless markup/CSS. App boots, one window, ZERO renderer console errors —
+    which matters here, since a missed reference would have thrown at init.
+    game.js 191513 -> 184875 bytes, index.html 49750 -> 47070, style.css 85093 -> 82825.
+  ✓ npm test still green (37 checks, 2 suites).
+
+  ── previous round ──
+              S3 FIX + TEST SUITE (2026-09-02):
 
   ✓ Settings slider debounced — 300ms trailing, so a full drag is one disk write
     instead of one per pixel. Mute button and checkbox write immediately, and both
@@ -74,14 +92,17 @@ LAST DONE:    S3 FIX + TEST SUITE (2026-09-02):
 
 IN FLIGHT:    none (clean stop)
 
-GATE 5 (GOLD) — OUTSTANDING, ranked:
+GATE 5 (GOLD) — OUTSTANDING:
   1. NOBODY HAS PLAYED IT. Boot is verified; a full career on the packaged build is not.
      This is the last real unknown and no amount of static checking substitutes for it.
-  2. "Endless Mode" ships as a main-menu button → COMING SOON screen with 5 locked era cards.
-     Not a softlock (Back works) but it is a placeholder on the front door, and Gold says no
-     placeholders. Per LAW 1 the call is cut the button for 1.0, or ship it knowingly. Kevin's.
-  3. Dev console ships in the retail build — godmode, setrank, maxstats, setoutcome, adddays.
-     Fine if intended as a feature; a cheat menu in a shipped build if not.
+     It is now the ONLY item standing between here and a defensible Gold call on the
+     software itself.
+  2. Presentation, if this is ever to sell rather than just ship: src/assets is empty
+     (all visuals are CSS and code-generated SVG), audio is five synthesised Web Audio
+     effects with no music, and there are no store assets or screenshots. Not gate
+     blockers for a personal release; they are the whole game for a commercial one.
+  ✓ (was 2) Endless Mode placeholder — CUT 2026-09-02.
+  ✓ (was 3) Dev console in retail — STRIPPED 2026-09-02.
   ✓ (was 4) Save WRITES unguarded — FIXED 2026-08-30.
   ✓ (was 5) Settings slider write amplification — FIXED 2026-09-02.
   ✓ (was 6) No single-instance lock — FIXED 2026-08-30.
@@ -106,11 +127,12 @@ NEXT 3:
      the new Setup .exe, which also tests the install path. This is gate item #1 and blocks Gold.
   2. ✓ DONE — first commit made 2026-08-30 (a626239, 42 files, no build output or
      node_modules). The project is finally under version control.
-  3. Decide Endless Mode: cut the menu button for 1.0, or ship the COMING SOON screen.
-     With the bug list empty, this and the playthrough are what stand between here and Gold.
+  3. Answer the last open question — "Firehouse 12" vs "Ashfall Fire Co." naming — and
+     decide whether to delete the dead .fuse_hidden* files (see housekeeping below).
 
-BLOCKED ON USER: the play session · the Endless Mode call · dev-console-in-retail call ·
-                  the Firehouse 12 / Ashfall Fire Co. naming question
+BLOCKED ON USER: the play session · the Firehouse 12 / Ashfall Fire Co. naming question ·
+                  whether to delete the dead .fuse_hidden* files (not in git — deletion is
+                  permanent, so left alone pending Kevin's word)
 NOTE:         node_modules/electron holds the LINUX binary (installed in the old Cowork
               sandbox), so `npm start` will not run on this machine. Packaging is unaffected —
               electron-builder pulls win32 electron from its own cache. Run `npm ci` locally

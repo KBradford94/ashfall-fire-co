@@ -8,16 +8,37 @@ None. All S1/S2/S3 bugs are closed — see Fixed below.
 
 ## Design / scope, not defects — need a decision from Kevin
 
-- **"Endless Mode" placeholder ships on the main menu.** Button → screen reading
-  COMING SOON with five locked era cards. Has a working Back button, so it is not a
-  softlock and not an S1 — but Gate 5 says no placeholders, and it is the second item
-  on the front door. Cut the button for 1.0, or ship it knowingly.
-- **Dev console ships in the retail build** (`godmode`, `setrank`, `maxstats`,
-  `setoutcome`, `adddays`, …). Legitimate as a feature; a cheat menu if unintended.
 - **Naming:** the product is "Ashfall Fire Co." and every in-game string says
   "Firehouse 12", including the credits line "Thanks for playing Firehouse 12."
+  Deliberate (Firehouse 12 is the station within the Ashfall Fire Department), or a
+  rebrand leftover? Still open.
+
+### Resolved by Kevin, 2026-09-02
+- **Endless Mode placeholder — CUT.** Button, screen, handler and CSS all removed.
+- **Dev console in retail — STRIPPED.** Module, markup, styles and helpers removed.
 
 ## Fixed
+
+- **2026-09-02 — Endless Mode placeholder removed.** The main menu carried an
+  "Endless Mode" button leading to a COMING SOON screen with five locked era cards.
+  Cut on Kevin's call: the menu button, the `#screen-endless` markup, the click
+  handler in `game.js`, and the `ENDLESS MODE SCREEN` CSS block. The main menu is now
+  New Career / Continue / Load / Settings / Credits / Erase — nothing that does not work.
+
+- **2026-09-02 — dev console stripped from the retail build.** A 178-line `DevConsole`
+  module shipped in the packaged game, opened with the backtick key, exposing
+  `godmode`, `setrank`, `maxstats`, `setoutcome`, `adddays`, `injure`, `bondmax` and
+  more. Removed entirely: the module, its markup, its CSS, the dev helper functions
+  (`devSpawnIncident`, `devSkipIncident`, `devSetOutcome`, `devSave`, `devReload`,
+  `getState`, `refreshHUD`, `startNewShift`) and the `DevConsole.init()` call.
+  **One real bug surfaced by this.** The "FIX NOW" apparatus-fault button's only
+  feedback when out of actions was `DevConsole.log(...)` — a line written to a console
+  the player could not open. Pressing it with no actions left did nothing visible at
+  all. Replaced with a warning toast and a failure sting, so the path now has the
+  visible and audible response the Definition of Done requires.
+  Verified: shipped asar contains no `DevConsole`, no `godmode`, no backtick handler,
+  no dev markup or CSS; app boots with zero renderer console errors.
+
 
 - **2026-09-02 — settings slider wrote to disk on every input event (was S3).**
   Dragging the volume slider issued one `settings.json` write per pixel of travel.

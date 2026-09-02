@@ -39,7 +39,6 @@
         <button class="menu-btn primary" id="btn-new-career">New Career</button>
         <button class="menu-btn" id="btn-continue">Continue Career</button>
         <button class="menu-btn" id="btn-load-game" disabled>Load Game</button>
-        <button class="menu-btn" id="btn-endless-mode">Endless Mode</button>
         <button class="menu-btn" id="btn-settings">Settings</button>
         <button class="menu-btn" id="btn-credits">Credits</button>
         <button class="menu-btn danger" id="btn-erase">Erase Save</button>
@@ -971,69 +970,7 @@
     </div>
   </div>
 
-  <!-- ===== DEV CONSOLE ===== -->
-  <div id="dev-console" class="dev-console hidden">
-    <div class="dev-console-header">
-      <span class="dev-console-title">[ DEV CONSOLE ]</span>
-      <span class="dev-mode-badge">DEV MODE</span>
-      <button id="dev-console-close">✕</button>
-    </div>
-    <div id="dev-console-output" class="dev-console-output"></div>
-    <div class="dev-console-input-row">
-      <span class="dev-prompt">&gt;</span>
-      <input type="text" id="dev-console-input" class="dev-console-input"
-             placeholder="help — list commands  |  Tab to autocomplete"
-             autocomplete="off" spellcheck="false" />
-    </div>
-  </div>
-
-  <!-- ===== SCREEN: Endless Mode ===== -->
-  <div id="screen-endless" class="screen">
-    <div class="screen-header">
-      <button class="back-btn" id="back-from-endless">&larr; Back</button>
-      <h2>Endless Mode</h2>
-    </div>
-    <div class="endless-content">
-      <div class="endless-intro">
-        <p class="endless-coming-soon">COMING SOON</p>
-        <p class="endless-desc">Run calls with any era of Firehouse 12 — no career progression, no academy. Pure incident command from the first tone.</p>
-      </div>
-      <div class="endless-era-grid">
-        <div class="era-card era-locked">
-          <div class="era-badge">S01–S04</div>
-          <div class="era-title">The Delgado Era</div>
-          <div class="era-subtitle">Truck 7 under Captain Delgado</div>
-          <div class="era-lock">🔒 Coming Soon</div>
-        </div>
-        <div class="era-card era-locked">
-          <div class="era-badge">S05–S08</div>
-          <div class="era-title">The Kade Years</div>
-          <div class="era-subtitle">12 at full strength — the golden era</div>
-          <div class="era-lock">🔒 Coming Soon</div>
-        </div>
-        <div class="era-card era-locked">
-          <div class="era-badge">S09–S11</div>
-          <div class="era-title">The Kessler Arc</div>
-          <div class="era-subtitle">Squad 4 leads — rescue-heavy operations</div>
-          <div class="era-lock">🔒 Coming Soon</div>
-        </div>
-        <div class="era-card era-locked">
-          <div class="era-badge">S12–S13</div>
-          <div class="era-title">Transition Period</div>
-          <div class="era-subtitle">New leadership, new faces</div>
-          <div class="era-lock">🔒 Coming Soon</div>
-        </div>
-        <div class="era-card era-locked">
-          <div class="era-badge">S14</div>
-          <div class="era-title">Kade's House</div>
-          <div class="era-subtitle">Delgado on Truck 7 · Tibbets on Engine · Priya on Ambo</div>
-          <div class="era-lock">🔒 Coming Soon</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- v2: Career Record modal -->
+<!-- v2: Career Record modal -->
   <div id="modal-career-record" class="modal hidden">
     <div class="modal-box career-record-box">
       <div class="modal-header">

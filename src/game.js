@@ -142,185 +142,6 @@ function getRankId(s) { return getCurrentRank(s)?.id || 'candidate'; }
 
 // buildAshfallMap and buildPortraitSVG are imported from ./ui/screens.js
 
-// ===== DEV CONSOLE =====
-const DevConsole = (() => {
-  let visible = false;
-  let gameRef = null;
-  const ALL_COMMANDS = [
-    'setrank','promote','setseason','setstat','maxstats','resetstats','setwhitfield',
-    'bondmax','bondreset','setbond','injure','heal','crewstates',
-    'spawnincident','skipincident','setoutcome','nextshift','addcalls','adddays',
-    'godmode','setcomplication','save','reload','printstate','clearlog',
-    'setrapport','setlegacy','help',
-  ];
-
-  function log(msg, cls='') {
-    const out = document.getElementById('dev-console-output');
-    if (!out) return;
-    const div = document.createElement('div');
-    div.className = 'dev-line' + (cls ? ' '+cls : '');
-    div.textContent = msg;
-    out.appendChild(div);
-    out.scrollTop = out.scrollHeight;
-  }
-
-  function toggle() {
-    visible = !visible;
-    const el = document.getElementById('dev-console');
-    el.classList.toggle('hidden', !visible);
-    if (visible) {
-      log('Firehouse 12 Dev Console — type "help" for commands', 'dev-info');
-      setTimeout(() => document.getElementById('dev-console-input')?.focus(), 50);
-    }
-  }
-
-  function init(game) {
-    gameRef = game;
-    document.addEventListener('keydown', e => {
-      if (e.key === '`') { e.preventDefault(); toggle(); }
-    });
-    document.getElementById('dev-console-close')?.addEventListener('click', () => {
-      visible = false;
-      document.getElementById('dev-console').classList.add('hidden');
-    });
-    const input = document.getElementById('dev-console-input');
-    if (input) {
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { runCommand(input.value.trim()); input.value = ''; }
-        else if (e.key === 'Tab') {
-          e.preventDefault();
-          const partial = input.value.trim().split(' ')[0];
-          const matches = ALL_COMMANDS.filter(c => c.startsWith(partial));
-          if (matches.length === 1) input.value = matches[0] + ' ';
-          else if (matches.length > 1) log('Matches: ' + matches.join(', '), 'dev-info');
-        }
-      });
-    }
-  }
-
-  function runCommand(raw) {
-    if (!raw) return;
-    log('> ' + raw);
-    const parts = raw.split(/\s+/);
-    const cmd = parts[0].toLowerCase();
-    const args = parts.slice(1);
-    const s = gameRef ? gameRef.getState() : null;
-
-    try {
-      switch(cmd) {
-        case 'help':
-          log('Commands:', 'dev-info');
-          log('  setrank <rank> | promote | setseason <n> | adddays <n>', 'dev-info');
-          log('  setstat <stat> <val> | maxstats | resetstats | setwhitfield <val>', 'dev-info');
-          log('  setrapport <val> | setlegacy <val>', 'dev-info');
-          log('  bondmax | bondreset | setbond <name> <val> | injure <name> | heal <name> | crewstates', 'dev-info');
-          log('  spawnincident <type> | skipincident | setoutcome <result>', 'dev-info');
-          log('  nextshift | addcalls <n> | godmode | setcomplication <type>', 'dev-info');
-          log('  save | reload | printstate | clearlog', 'dev-info');
-          log('  Suppression ranks: candidate probie firefighter driver_engineer lieutenant captain battalion_chief', 'dev-info');
-          log('  EMS ranks: ems_candidate paramedic pic field_chief', 'dev-info');
-          break;
-        case 'setrank': {
-          const suppMap = {candidate:0,probie:1,firefighter:2,driver_engineer:3,lieutenant:4,captain:5,battalion_chief:6};
-          const emsMap  = {ems_candidate:0,paramedic:1,pic:2,field_chief:3};
-          const rankMap = s.track==='ems' ? emsMap : suppMap;
-          const ri = rankMap[args[0]];
-          if (ri === undefined) { log('Unknown rank. Options: '+Object.keys(rankMap).join(', '), 'dev-error'); break; }
-          s.rankIndex = ri; gameRef.refreshHUD(); log('Rank set to '+getRanks(s)[ri].label); break;
-        }
-        case 'promote':
-          if (s.rankIndex < getRanks(s).length-1) { s.rankIndex++; gameRef.refreshHUD(); log('Promoted to '+getRanks(s)[s.rankIndex].label); }
-          else log('Already at max rank', 'dev-warn'); break;
-        case 'setseason': s.shiftNumber = parseInt(args[0])||1; gameRef.refreshHUD(); log('Shift set to '+s.shiftNumber); break;
-        case 'setstat': {
-          const stat=args[0], val=parseInt(args[1]);
-          if (!(stat in s.stats)) { log('Unknown stat', 'dev-error'); break; }
-          s.stats[stat] = Math.max(0,Math.min(100,val));
-          gameRef.refreshHUD(); log(`${stat} = ${s.stats[stat]}`); break;
-        }
-        case 'maxstats':
-          Object.keys(s.stats).forEach(k => s.stats[k]=100);
-          gameRef.refreshHUD(); log('All stats maxed', 'dev-warn'); break;
-        case 'resetstats':
-          Object.keys(BASE_STATS).forEach(k => s.stats[k]=BASE_STATS[k]);
-          gameRef.refreshHUD(); log('Stats reset to base'); break;
-        case 'setwhitfield':
-          s.whitfieldTrust = Math.max(0,Math.min(100,parseInt(args[0])||50));
-          gameRef.refreshHUD(); log('Whitfield trust = '+s.whitfieldTrust); break;
-        case 'bondmax':
-          s.roster.forEach(m => m.bond=100); log('All bonds maxed', 'dev-warn'); break;
-        case 'bondreset':
-          s.roster.forEach(m => m.bond=10); log('All bonds reset'); break;
-        case 'setbond': {
-          const name=args[0]?.toLowerCase(), val=parseInt(args[1]);
-          const m=s.roster.find(r=>r.id===name||r.name.toLowerCase().includes(name));
-          if (!m) { log('Unknown crew member', 'dev-error'); break; }
-          m.bond=Math.max(0,Math.min(100,val)); log(`${m.name} bond = ${m.bond}`); break;
-        }
-        case 'injure': {
-          const name=args[0]?.toLowerCase();
-          const m=s.roster.find(r=>r.id===name||r.name.toLowerCase().includes(name));
-          if (!m) { log('Unknown crew', 'dev-error'); break; }
-          if (!s.crewStates) s.crewStates={};
-          s.crewStates[m.id]='injured'; log(`${m.name} → INJURED`, 'dev-warn'); break;
-        }
-        case 'heal': {
-          const name=args[0]?.toLowerCase();
-          const m=s.roster.find(r=>r.id===name||r.name.toLowerCase().includes(name));
-          if (!m) { log('Unknown crew', 'dev-error'); break; }
-          if (s.crewStates) s.crewStates[m.id]='normal';
-          log(`${m.name} → NORMAL`); break;
-        }
-        case 'crewstates':
-          s.roster.forEach(m => log(`  ${m.name}: ${(s.crewStates||{})[m.id]||'normal'}`, 'dev-info'));
-          break;
-        case 'spawnincident':
-          gameRef.devSpawnIncident(args[0]); break;
-        case 'skipincident':
-          gameRef.devSkipIncident(); break;
-        case 'setoutcome':
-          gameRef.devSetOutcome(args[0]); break;
-        case 'nextshift':
-          s.shiftNumber++; gameRef.startNewShift(); log('Advanced to shift '+s.shiftNumber); break;
-        case 'addcalls':
-          s.totalCalls=(s.totalCalls||0)+parseInt(args[0]||1);
-          gameRef.refreshHUD(); log('Total calls = '+s.totalCalls); break;
-        case 'godmode':
-          Object.keys(s.stats).forEach(k=>s.stats[k]=100); s.whitfieldTrust=100;
-          s.roster.forEach(m=>{m.bond=100; if(s.crewStates)s.crewStates[m.id]='confident'});
-          gameRef.refreshHUD(); log('GOD MODE ON', 'dev-warn'); break;
-        case 'setcomplication': {
-          const c=COMPLICATIONS.find(x=>x.id===args[0]);
-          if (!c) { log('Unknown complication. Options: '+COMPLICATIONS.map(x=>x.id).join(', '),'dev-error'); break; }
-          s.currentComplications=[c]; log('Complication set: '+c.label,'dev-warn'); break;
-        }
-        case 'save': gameRef.devSave(); log('Saved'); break;
-        case 'reload': gameRef.devReload(); break;
-        case 'adddays':
-          s.shiftNumber = (s.shiftNumber||1)+(parseInt(args[0]||1)*2);
-          gameRef.refreshHUD(); log('Advanced '+args[0]+' shifts'); break;
-        case 'setrapport':
-          s.hospitalRapport = Math.max(0,Math.min(100,parseInt(args[0])||50));
-          gameRef.refreshHUD(); log('Hospital rapport = '+s.hospitalRapport); break;
-        case 'setlegacy':
-          s.legacyScore = parseInt(args[0])||0;
-          gameRef.refreshHUD(); log('Legacy score = '+s.legacyScore); break;
-        case 'printstate':
-          log(JSON.stringify({rank:getRanks(s)[s.rankIndex]?.label,shift:s.shiftNumber,track:s.track,
-            stats:s.stats,whitfieldTrust:s.whitfieldTrust,unit:s.unit,specialist:s.specialist,
-            hospitalRapport:s.hospitalRapport,legacy:s.legacyScore},'',2),'dev-info');
-          break;
-        case 'clearlog':
-          const out=document.getElementById('dev-console-output'); if(out) out.innerHTML=''; break;
-        default:
-          log(`Unknown command: "${cmd}". Type "help".`, 'dev-error');
-      }
-    } catch(e) { log('Error: '+e.message, 'dev-error'); }
-  }
-
-  return { init, toggle, log };
-})();
-
 // ===== GAME STATE =====
 const Game = (() => {
   let state = null;
@@ -516,7 +337,6 @@ const Game = (() => {
       }
     };
     el('btn-load-game').onclick = initLoadGameScreen;
-    el('btn-endless-mode').onclick = () => { showScreen('screen-endless'); el('back-from-endless').onclick = initMenu; };
     // Enable Load Game if any slots exist
     try {
       const slots = await window.electronAPI.listSlots();
@@ -2580,7 +2400,11 @@ const Game = (() => {
           faultsEl.appendChild(faultRow);
           faults.push(item.id);
           el('fix-'+item.id).onclick=()=>{
-            if (state.actionsRemaining<=0) { DevConsole.log('No actions remaining to fix fault.','dev-warn'); return; }
+            if (state.actionsRemaining<=0) {
+              Toast.show('No actions left', 'You are out of actions this shift — this fault stays open.', 'warning');
+              try { Sound.playFailureSting(); } catch(e) {}
+              return;
+            }
             state.actionsRemaining--;
             el('actions-remaining') && (el('actions-remaining').textContent=state.actionsRemaining);
             el('fix-'+item.id).textContent='FIXED ✓'; el('fix-'+item.id).className='fault-fix-btn fixed';
@@ -3695,45 +3519,6 @@ const Game = (() => {
     showModal('modal-sorensen-debrief');
   }
 
-  // ===== DEV HELPERS (exposed to DevConsole) =====
-  function getState() { return state; }
-  function refreshHUD() {
-    renderHUD('shift-hud-stats');
-    const rank=getCurrentRank();
-    if (el('shift-rank')) el('shift-rank').textContent=rank.label;
-    if (el('shift-number')) el('shift-number').textContent=state.shiftNumber;
-    if (el('hud-calls-count')) el('hud-calls-count').textContent=state.totalCalls||0;
-    renderWhitfieldTrust();
-    renderProbieStandingBar();
-    renderRankSpecificRooms();
-    renderHospitalRapport();
-  }
-  function devSpawnIncident(typeId) {
-    const ct=CALL_TYPES.find(c=>c.id===typeId);
-    if (!ct) { DevConsole.log('Unknown: '+CALL_TYPES.map(c=>c.id).join(', '),'dev-error'); return; }
-    ct._weatherPenalty=0; ct._equipPenalty=0;
-    _sizeUpModifier=0; _assignedCrew=[]; _tacticalModifier=0;
-    DevConsole.log('Spawning: '+ct.name,'dev-warn');
-    launchIncidentCommand(ct);
-  }
-  function devSkipIncident() {
-    if (document.getElementById('screen-call').classList.contains('active')) {
-      Sound.stopAmbientHum(); showFirehouseScreen(); Sound.startAmbientHum();
-      DevConsole.log('Incident skipped');
-    } else DevConsole.log('Not on call screen','dev-error');
-  }
-  function devSetOutcome(result) {
-    const valid=['critSuccess','success','partial','failure'];
-    if (!valid.includes(result)) { DevConsole.log('Valid: '+valid.join(', '),'dev-error'); return; }
-    if (!_callType) { DevConsole.log('No active call','dev-error'); return; }
-    const outcome=_callType.outcomes[result];
-    applyStats(outcome.stats); renderHUD('shift-hud-stats');
-    DevConsole.log('Outcome forced: '+outcome.label,'dev-warn');
-  }
-  function devSave() { saveGame(); }
-  function devReload() { window.location.reload(); }
-  function startNewShift() { startShift(); }
-
   // ===== SAVE / LOAD =====
   // Most call sites fire this without awaiting, so a failure has to announce
   // itself rather than being returned to a caller that ignores it.
@@ -3840,7 +3625,6 @@ const Game = (() => {
     await loadAppSettings();
     await initMenu();
     initSettingsAndCredits();
-    DevConsole.init({getState,refreshHUD,devSpawnIncident,devSkipIncident,devSetOutcome,devSave,devReload,startNewShift});
   }
 
   return { init };

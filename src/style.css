@@ -848,51 +848,6 @@ html, body {
 .summary-entry { font-size: 12px; color: var(--text-secondary); }
 .summary-entry strong { color: var(--text-primary); }
 
-/* ===== DEV CONSOLE ===== */
-.dev-console {
-  position: fixed; bottom: 0; left: 0; right: 0; height: 300px;
-  background: #0a0f08; border-top: 2px solid #1a3a1a;
-  display: flex; flex-direction: column; z-index: 99999;
-  font-family: var(--font-mono); font-size: 12px;
-  transform: translateY(100%); transition: transform 0.25s ease;
-}
-.dev-console:not(.hidden) { transform: translateY(0); }
-.dev-console.hidden { transform: translateY(100%); display: flex !important; }
-.dev-console-header {
-  display: flex; align-items: center; gap: 12px; padding: 6px 14px;
-  background: #060d05; border-bottom: 1px solid #1a3a1a; flex-shrink: 0;
-  -webkit-app-region: no-drag;
-}
-.dev-console-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #2ecc40; }
-.dev-mode-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: 2px; padding: 2px 7px;
-  background: rgba(46,204,64,0.15); color: #2ecc40; border: 1px solid #2ecc40;
-  border-radius: 2px;
-}
-#dev-console-close {
-  margin-left: auto; background: none; border: 1px solid #1a3a1a; color: #2ecc40;
-  width: 22px; height: 22px; cursor: pointer; border-radius: 2px; font-size: 12px;
-  display: flex; align-items: center; justify-content: center;
-}
-.dev-console-output {
-  flex: 1; overflow-y: auto; padding: 8px 14px;
-  display: flex; flex-direction: column; gap: 2px;
-}
-.dev-line { font-size: 12px; color: #2ecc40; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
-.dev-line.dev-error { color: #ff4136; }
-.dev-line.dev-info  { color: #7fdbff; }
-.dev-line.dev-warn  { color: #ffdc00; }
-.dev-console-input-row {
-  display: flex; align-items: center; gap: 8px; padding: 6px 14px;
-  border-top: 1px solid #1a3a1a; flex-shrink: 0; -webkit-app-region: no-drag;
-}
-.dev-prompt { color: #2ecc40; font-weight: 700; }
-.dev-console-input {
-  flex: 1; background: transparent; border: none; outline: none;
-  color: #2ecc40; font-family: var(--font-mono); font-size: 12px; caret-color: #2ecc40;
-}
-.dev-console-input::placeholder { color: #1a4a1a; }
-
 /* ===== CREW STATES IN ROSTER ===== */
 .roster-state-badge {
   display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1px;
@@ -1389,32 +1344,6 @@ html, body {
 .probie-review-grade { font-size: 22px; font-weight: 900; letter-spacing: 2px; }
 .probie-review-pass { color: var(--success); }
 .probie-review-fail { color: var(--danger); }
-
-/* ===== ENDLESS MODE SCREEN ===== */
-#screen-endless { background: var(--bg-dark); display: flex; flex-direction: column; }
-.endless-content { flex: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; align-items: center; gap: 28px; }
-.endless-intro { text-align: center; max-width: 540px; }
-.endless-coming-soon {
-  font-size: 13px; font-weight: 800; letter-spacing: 5px; color: var(--accent-amber);
-  text-transform: uppercase; margin-bottom: 10px;
-}
-.endless-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
-.endless-era-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; width: 100%; max-width: 900px; }
-.era-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 18px 14px; display: flex; flex-direction: column;
-  align-items: center; gap: 8px; text-align: center; transition: border-color 0.2s;
-}
-.era-card.era-locked { opacity: 0.6; }
-.era-badge {
-  font-size: 10px; font-weight: 800; letter-spacing: 2px; color: var(--accent-amber);
-  background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);
-  border-radius: 3px; padding: 2px 8px;
-}
-.era-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
-.era-subtitle { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
-.era-lock { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
-
 
 /* ===== v2: Exam overhaul ===== */
 .exam-option-btn.insight-eliminated {

@@ -10,7 +10,7 @@ This project is run by the `virtual-studio` skill. Load that skill for any task 
 - **Game:** Ashfall Fire Co. — Career Simulator (firefighter/EMS career sim; formerly "Firehouse 51," rebranded off the Chicago Fire IP)
 - **Engine:** Electron 28, vanilla JS/DOM, no framework, no bundler — locked, do not change without restarting the charter
 - **Target device:** Windows desktop (electron-builder targets `win`/nsis + zip)
-- **Milestone:** Adoption audit complete, between Beta and Gold — see `studio/STATE.md`
+- **Milestone:** Beta passed. One item from Gold — a human playthrough of the packaged build. See `studio/STATE.md`
 - **Build entry point:** `src/index.html` → `src/game.js`; Electron entry `main.js`
 
 ## Structure
@@ -22,29 +22,47 @@ build/    icon assets for electron-builder (not a build output folder)
 ```
 
 ## Non-negotiables for this project
-1. **Finished beats big.** No new features (including Endless Mode) until packaging, save robustness, version control, and UI furniture (settings/credits) are done.
+1. **Finished beats big.** Packaging, save robustness, version control and UI furniture are
+   all done as of 2026-09-02. Endless Mode was cut from 1.0, not deferred — reopening it is a
+   scoping conversation, not a resumption.
 2. **This project is past Alpha.** Do not add new gameplay systems without an explicit scoping conversation with Kevin first — see `studio/BACKLOG.md` ticket #12.
 3. **Definition of Done applies to every ticket:** works · visual response · audio response · failure state · survives save/reload · holds the frame budget · reads correctly on the target device.
 4. **Never pause mid-ticket.** Reach a clean stop, write `STATE.md`, then stop.
 5. **Update `STATE.md` at the end of every turn** without being asked.
 
 ## Known technical debt (see studio/ARCHITECTURE.md and studio/STATE.md for detail)
-- **No git repository exists yet, and it cannot be created from inside a Cowork sandbox** — the mounted
-  folder rejects `unlink()`, which git needs. Run `git init` directly on the local Windows machine.
-  A failed attempt left an inert `.git/` folder and stray tmp files in the project root — delete those
-  first (Explorer), then init for real. Still the top priority.
-- Dead code (`src/data.js`, `src/ui/hud.js`, 7 `.fuse_hidden*` files) is flagged with banners and
-  excluded from the packaged build as of 2026-08-14, but not physically deleted — same sandbox
-  delete restriction. Safe to delete locally whenever convenient.
-- ~~`main.js` save/load IPC handlers don't guard against a corrupt save file~~ — **fixed 2026-08-14**,
-  corrupt saves now quarantine to `.corrupt-<timestamp>.bak` and load returns `null` instead of throwing.
-- ~~Never packaged~~ — **fixed 2026-08-14**, a real Windows zip build exists at `dist4/`. Older
-  `dist/`, `dist2/`, `dist3/` folders from earlier attempts in the same session are superseded
-  (dist2's zip is truncated/invalid) and safe to delete locally.
-- Settings screen, credits screen, and a live version display were added 2026-08-14 — no longer a gap.
-- **Not yet verified:** nobody has watched the packaged app actually launch on a real Windows machine.
-  All checks so far are code-level (syntax, asar contents, a headless launch attempt that got as far
-  as a missing OS library in the sandbox, not an app bug). Do a real launch before calling this done.
+- ~~No git repository exists yet~~ — **resolved 2026-08-30.** The repo was jammed by a stale
+  `.git/index.lock` left by the failed sandbox `git init`; removed on the local Windows machine
+  and the first commit made. Branch `master`, no remote. `.gitignore` covers `dist*/`.
+- ~~`main.js` save/load IPC handlers don't guard against a corrupt save file~~ — **fixed
+  2026-08-14**; corrupt saves quarantine to `.corrupt-<timestamp>.bak` and load returns `null`.
+- ~~Save *writes* unguarded~~ — **fixed 2026-08-30.** All writes go through an atomic
+  `safeWriteJSON()` (write `.tmp`, rename), handlers return `{ success, error }`, and the
+  renderer raises a toast plus a failure sting instead of losing progress silently.
+- ~~No single-instance lock~~ — **fixed 2026-08-30.** A second launch quits and focuses the
+  open window rather than racing on `career.json`.
+- ~~Settings slider wrote to disk on every input event~~ — **fixed 2026-09-02**, 300ms
+  debounce with a flush on unload.
+- ~~Never packaged~~ — **fixed 2026-08-14**, and a real NSIS **installer** now exists too as of
+  2026-08-29 (`dist/Ashfall Fire Co Setup 1.0.0.exe`). Earlier builds only ever emitted a zip.
+  Older `dist2/`, `dist3/`, `dist4/` folders are superseded and safe to delete.
+- ~~Endless Mode placeholder and dev console shipped in the retail build~~ — **both removed
+  2026-09-02** on Kevin's call.
+- **Dead code still on disk:** `src/data.js`, `src/ui/hud.js` and 7 `.fuse_hidden*` files.
+  Excluded from the packaged build; `.fuse_hidden*` is gitignored, so those seven are **not in
+  version control and deleting them is permanent** — left in place pending Kevin's word.
+  `data.js` and `hud.js` are tracked, so deleting those is safe and reversible.
+- **The app now definitely launches** (verified on Windows 2026-08-29: window opens maximized,
+  zero renderer console errors, second-instance lock confirmed). **But nobody has played a full
+  career on a packaged build.** That is the last open Gold item.
+
+## Testing
+`npm test` runs two suites, 37 checks: `test/save-handlers.test.cjs` drives the real `main.js`
+IPC handlers against a stubbed electron module, and `test/settings-debounce.test.cjs` extracts
+and exercises the settings debounce from `src/game.js`. Excluded from the packaged asar.
+Note `node_modules/electron` holds the **Linux** binary from the old Cowork sandbox, so
+`npm start` will not run on Windows — run `npm ci` first if you want the dev launch.
+Packaging is unaffected; electron-builder uses its own cache.
 
 ## Working from a phone
 Replies stay to five lines: done / next / needs you / files changed / burn.
