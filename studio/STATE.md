@@ -1,7 +1,7 @@
 ════ STUDIO STATE ════
 PROJECT:      Ashfall Fire Co. · Electron (vanilla JS, no framework)
 MILESTONE:    Gate 4 (Beta) PASSED · Gate 5 (Gold) NOT PASSED — 6 items outstanding
-UPDATED:      2026-09-02 (Endless Mode cut · dev console stripped · bug list empty)
+UPDATED:      2026-09-02 (Endless Mode cut · dev console stripped · dead files deleted)
 
 BURN:         ~38u this window · ~117u running total · see BURN.md
 
@@ -116,9 +116,12 @@ POLISH / HOUSEKEEPING (not gate blockers):
     rebrand leftover? Needs a one-line decision from Kevin.
   - Installer is unsigned — Windows SmartScreen will warn on first install. Normal for
     an indie release; worth knowing before strangers see it.
-  - Dead code still physically present: src/data.js, src/ui/hud.js, 7 .fuse_hidden* files.
-    Excluded from the build; .fuse_hidden* is gitignored, but data.js and hud.js are staged
-    into the first commit. Deletable now (no sandbox restriction on this machine).
+  - ✓ The 7 .fuse_hidden* dead files were DELETED 2026-09-02 (recycled, not hard-deleted —
+    they were gitignored and so unrecoverable from history). With them went the last
+    DevConsole, godmode and pre-rebrand "Firehouse 51"/"Chicago" strings in the tree;
+    a grep across src/ and the main process now comes back completely clean.
+    src/data.js and src/ui/hud.js remain — build-excluded and tracked in git, so
+    deleting those two is safe and reversible whenever convenient.
   - dist2/, dist3/, dist4/ superseded (~310MB). Now gitignored. Safe to delete.
   - No controls/how-to-play doc, no store assets or screenshots.
 
@@ -127,12 +130,9 @@ NEXT 3:
      the new Setup .exe, which also tests the install path. This is gate item #1 and blocks Gold.
   2. ✓ DONE — first commit made 2026-08-30 (a626239, 42 files, no build output or
      node_modules). The project is finally under version control.
-  3. Answer the last open question — "Firehouse 12" vs "Ashfall Fire Co." naming — and
-     decide whether to delete the dead .fuse_hidden* files (see housekeeping below).
+  3. Answer the last open question — "Firehouse 12" vs "Ashfall Fire Co." naming.
 
-BLOCKED ON USER: the play session · the Firehouse 12 / Ashfall Fire Co. naming question ·
-                  whether to delete the dead .fuse_hidden* files (not in git — deletion is
-                  permanent, so left alone pending Kevin's word)
+BLOCKED ON USER: the play session · the Firehouse 12 / Ashfall Fire Co. naming question
 NOTE:         node_modules/electron holds the LINUX binary (installed in the old Cowork
               sandbox), so `npm start` will not run on this machine. Packaging is unaffected —
               electron-builder pulls win32 electron from its own cache. Run `npm ci` locally

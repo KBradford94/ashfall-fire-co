@@ -48,10 +48,13 @@ build/    icon assets for electron-builder (not a build output folder)
   Older `dist2/`, `dist3/`, `dist4/` folders are superseded and safe to delete.
 - ~~Endless Mode placeholder and dev console shipped in the retail build~~ — **both removed
   2026-09-02** on Kevin's call.
-- **Dead code still on disk:** `src/data.js`, `src/ui/hud.js` and 7 `.fuse_hidden*` files.
-  Excluded from the packaged build; `.fuse_hidden*` is gitignored, so those seven are **not in
-  version control and deleting them is permanent** — left in place pending Kevin's word.
-  `data.js` and `hud.js` are tracked, so deleting those is safe and reversible.
+- ~~7 `.fuse_hidden*` dead files~~ — **deleted 2026-09-02** (sent to the Recycle Bin rather
+  than hard-deleted, since they were gitignored and therefore unrecoverable from history).
+  They were the last place `DevConsole`, `godmode` and pre-rebrand "Firehouse 51"/"Chicago"
+  strings appeared anywhere in the tree.
+- **Dead code still on disk:** `src/data.js` and `src/ui/hud.js`. Excluded from the packaged
+  build via `package.json`'s `files` list, banner-flagged, and tracked in git — so deleting
+  them is safe and reversible whenever convenient.
 - **The app now definitely launches** (verified on Windows 2026-08-29: window opens maximized,
   zero renderer console errors, second-instance lock confirmed). **But nobody has played a full
   career on a packaged build.** That is the last open Gold item.
