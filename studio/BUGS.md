@@ -4,12 +4,7 @@ Severity: **S1** blocks play or misses a gate · **S2** degrades · **S3** cosme
 
 ## Open
 
-### S3 — Settings volume slider writes to disk on every input event
-`src/game.js` — the `input` handler on `#settings-volume-slider` calls
-`persistAppSettings()` directly, so dragging the slider issues one `settings.json`
-write per pixel of travel.
-**Fix:** debounce to ~250ms, or persist on `change` instead of `input`.
-Found: 2026-08-29.
+None. All S1/S2/S3 bugs are closed — see Fixed below.
 
 ## Design / scope, not defects — need a decision from Kevin
 
@@ -23,6 +18,22 @@ Found: 2026-08-29.
   "Firehouse 12", including the credits line "Thanks for playing Firehouse 12."
 
 ## Fixed
+
+- **2026-09-02 — settings slider wrote to disk on every input event (was S3).**
+  Dragging the volume slider issued one `settings.json` write per pixel of travel.
+  Writes are now on a 300ms trailing debounce, so a full drag collapses to a single
+  write carrying the final value. Discrete changes (the mute button, the mute
+  checkbox) pass `immediate: true` and land straight away; the mute button also now
+  routes through `persistAppSettings()` instead of calling `saveSettings` raw, so
+  there is one persistence path rather than two. A pending write is flushed on
+  `beforeunload` and on `visibilitychange`→hidden, so a change made in the last
+  fraction of a second before quitting is not lost. A failed settings write now
+  raises a warning toast instead of failing silently.
+  **Verified:** 15/15 automated checks that extract the real debounce block from
+  `src/game.js` and run it — 31 slider events collapse to 1 write with the final
+  value, immediate cancels a pending debounce rather than double-writing, both flush
+  paths fire exactly once with no duplicate afterwards, and a failed write warns.
+
 
 - **2026-08-30 — save/delete WRITE paths were unguarded (was S2).** `save-game`,
   `save-slot` and `delete-save` called `writeFileSync`/`unlinkSync` bare; a failed

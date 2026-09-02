@@ -7,7 +7,8 @@
     "start": "electron .",
     "launch": "node_modules\\electron\\dist\\electron.exe .",
     "build": "electron-builder --win",
-    "make-icon": "node make-icon.js"
+    "make-icon": "node make-icon.js",
+    "test": "node test/run.cjs"
   },
   "build": {
     "appId": "com.ashfallgames.ashfallfireco",

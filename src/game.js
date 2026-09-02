@@ -537,7 +537,7 @@ const Game = (() => {
       el('btn-mute').textContent=m?'🔇':'🔊';
       el('btn-mute').classList.toggle('muted',m);
       const muteChk = el('settings-mute-checkbox'); if (muteChk) muteChk.checked = m;
-      window.electronAPI.saveSettings({ volume: Sound.getVolume(), muted: m });
+      persistAppSettings({ immediate: true });
     };
     el('btn-min').onclick = ()=>window.electronAPI.minimizeWindow();
     el('btn-max').onclick = ()=>window.electronAPI.maximizeWindow();
@@ -3762,9 +3762,42 @@ const Game = (() => {
       muteBtn.classList.toggle('muted', Sound.isMuted());
     }
   }
-  function persistAppSettings() {
-    window.electronAPI.saveSettings({ volume: Sound.getVolume(), muted: Sound.isMuted() });
+  // Settings are written to disk on a trailing debounce. Dragging the volume
+  // slider fires `input` continuously, and writing settings.json on every event
+  // meant one disk write per pixel of travel. Discrete changes (the mute button,
+  // the mute checkbox) pass immediate:true so they land straight away, and any
+  // pending write is flushed before the window goes away so a change made in the
+  // last quarter-second is never lost.
+  let _settingsTimer = null;
+  function writeAppSettings() {
+    _settingsTimer = null;
+    Promise.resolve(window.electronAPI.saveSettings({
+      volume: Sound.getVolume(),
+      muted: Sound.isMuted(),
+    })).then(res => {
+      if (!res || res.success === false) {
+        Toast.show('Settings not saved',
+          `Your audio settings will reset next launch${res && res.error ? ' — ' + res.error : ''}.`,
+          'warning');
+      }
+    }).catch(() => {
+      Toast.show('Settings not saved', 'Your audio settings will reset next launch.', 'warning');
+    });
   }
+  function persistAppSettings(opts) {
+    if (_settingsTimer) { clearTimeout(_settingsTimer); _settingsTimer = null; }
+    if (opts && opts.immediate) { writeAppSettings(); return; }
+    _settingsTimer = setTimeout(writeAppSettings, 300);
+  }
+  function flushAppSettings() {
+    if (_settingsTimer) { clearTimeout(_settingsTimer); writeAppSettings(); }
+  }
+  window.addEventListener('beforeunload', flushAppSettings);
+  // beforeunload does not fire reliably when the window is closed via the custom
+  // titlebar, so catch the tab going away as well.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushAppSettings();
+  });
 
   async function initSettingsAndCredits() {
     const versionEls = document.querySelectorAll('.app-version-display');
@@ -3794,7 +3827,7 @@ const Game = (() => {
       Sound.setMuted(e.target.checked);
       const muteBtn = el('btn-mute');
       if (muteBtn) { muteBtn.textContent = Sound.isMuted()?'🔇':'🔊'; muteBtn.classList.toggle('muted', Sound.isMuted()); }
-      persistAppSettings();
+      persistAppSettings({ immediate: true });
     });
 
     const btnCredits = el('btn-credits');

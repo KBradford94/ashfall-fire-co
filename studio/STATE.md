@@ -1,15 +1,33 @@
 ════ STUDIO STATE ════
 PROJECT:      Ashfall Fire Co. · Electron (vanilla JS, no framework)
 MILESTONE:    Gate 4 (Beta) PASSED · Gate 5 (Gold) NOT PASSED — 6 items outstanding
-UPDATED:      2026-08-30 (S2 fixes shipped · repo under version control — first commit made)
+UPDATED:      2026-09-02 (S3 fixed · bug list now empty · test suite added)
 
-BURN:         ~22u this window · ~101u running total · see BURN.md
+BURN:         ~30u this window · ~109u running total · see BURN.md
 
 ARTEFACTS:    CHARTER v1 · PILLARS v1 · ARCHITECTURE v2 · SAVE v2 · BUDGET v1 · ECONOMY v1
               · BACKLOG v2 · BUGS v3 · COMMITMENTS v2 · ASSUMPTIONS v1
               · BUILD 1.0.0 — dist/ (installer + zip, built 2026-08-29 on real Windows)
 
-LAST DONE:    S2 FIXES TICKET (2026-08-30) — both S2 bugs from the audit closed and shipped:
+LAST DONE:    S3 FIX + TEST SUITE (2026-09-02):
+
+  ✓ Settings slider debounced — 300ms trailing, so a full drag is one disk write
+    instead of one per pixel. Mute button and checkbox write immediately, and both
+    now go through the single persistAppSettings() path. Pending writes flush on
+    beforeunload and on visibilitychange→hidden so nothing is lost at quit. A failed
+    settings write raises a warning toast rather than failing silently.
+    Verified: 15/15 checks against the real block extracted from src/game.js.
+  ✓ Test suite added to the repo — `npm test`. Two suites, 37 checks:
+    test/save-handlers.test.cjs drives the real main.js IPC handlers against a stubbed
+    electron module (happy path, EPERM on a read-only save, circular-ref serialise
+    failure, slot metadata, corrupt-save quarantine regression, delete, settings
+    fallback); test/settings-debounce.test.cjs exercises the extracted debounce.
+    These previously lived in a temp folder and were lost when it was cleared — they
+    are in version control now. Confirmed excluded from the packaged asar.
+  ✓ Rebuilt and smoke-tested: installer + zip current, app boots, one window, 4 procs.
+
+  ── previous round ──
+              S2 FIXES TICKET (2026-08-30) — both S2 bugs from the audit closed and shipped:
 
   ✓ Save-write hardening. All write paths now go through an atomic `safeWriteJSON()`
     (serialise → write .tmp → rename), so a failed write leaves the previous save intact
@@ -64,10 +82,11 @@ GATE 5 (GOLD) — OUTSTANDING, ranked:
      placeholders. Per LAW 1 the call is cut the button for 1.0, or ship it knowingly. Kevin's.
   3. Dev console ships in the retail build — godmode, setrank, maxstats, setoutcome, adddays.
      Fine if intended as a feature; a cheat menu in a shipped build if not.
-  4. Settings volume slider calls saveSettings() on every `input` event — one disk write per
-     pixel of drag. Needs debouncing. S3 in BUGS.md. Only open bug.
-  ✓ (was 4) Save WRITES unguarded — FIXED 2026-08-30, see below.
-  ✓ (was 6) No single-instance lock — FIXED 2026-08-30, see below.
+  ✓ (was 4) Save WRITES unguarded — FIXED 2026-08-30.
+  ✓ (was 5) Settings slider write amplification — FIXED 2026-09-02.
+  ✓ (was 6) No single-instance lock — FIXED 2026-08-30.
+  BUGS.md now has an empty Open section. Items 1-3 above are decisions and a
+  playthrough, not defects.
 
 POLISH / HOUSEKEEPING (not gate blockers):
   - Branding inconsistency: the product is "Ashfall Fire Co." but all in-game text says
@@ -88,7 +107,7 @@ NEXT 3:
   2. ✓ DONE — first commit made 2026-08-30 (a626239, 42 files, no build output or
      node_modules). The project is finally under version control.
   3. Decide Endless Mode: cut the menu button for 1.0, or ship the COMING SOON screen.
-     Then the S3 slider debounce — the only bug left open.
+     With the bug list empty, this and the playthrough are what stand between here and Gold.
 
 BLOCKED ON USER: the play session · the Endless Mode call · dev-console-in-retail call ·
                   the Firehouse 12 / Ashfall Fire Co. naming question
